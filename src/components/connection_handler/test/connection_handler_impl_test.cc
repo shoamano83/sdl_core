@@ -55,6 +55,7 @@ namespace connection_handler_test {
 using namespace ::connection_handler;
 using ::protocol_handler::ServiceType;
 using namespace ::protocol_handler;
+using transport_manager::transport_adapter::DeviceType;
 using ::testing::_;
 using ::testing::ByRef;
 using ::testing::DoAll;
@@ -109,8 +110,11 @@ class ConnectionHandlerTest : public ::testing::Test {
   }
   // Additional SetUp
   void AddTestDeviceConnection() {
-    const transport_manager::DeviceInfo device_info(
-        device_handle_, mac_address_, device_name_, connection_type_);
+    const transport_manager::DeviceInfo device_info(device_handle_,
+                                                    mac_address_,
+                                                    device_name_,
+                                                    connection_type_,
+                                                    DeviceType::BLUETOOTH);
     // Add Device and connection
     ON_CALL(mock_connection_handler_settings, heart_beat_timeout())
         .WillByDefault(Return(1000u));
@@ -694,12 +698,15 @@ TEST_F(ConnectionHandlerTest, UpdateDeviceList) {
   device_name_ = "test_name";
   mac_address_ = "test_address";
   const transport_manager::DeviceInfo added_info(
-      0, "test_address", "test_name", "BTMAC");
+      0, "test_address", "test_name", "BTMAC", DeviceType::BLUETOOTH);
   connection_handler_->OnDeviceAdded(added_info);
 
   // Prepare map with DeviceInfo that sets in OnDeviceListUpdated
-  const transport_manager::DeviceInfo unused_parameter(
-      0, "mac_address_", "device_name_", "connection_type_");
+  const transport_manager::DeviceInfo unused_parameter(0,
+                                                       "mac_address_",
+                                                       "device_name_",
+                                                       "connection_type_",
+                                                       DeviceType::BLUETOOTH);
   std::vector<transport_manager::DeviceInfo> unused_info;
   unused_info.push_back(unused_parameter);
   DeviceMap map_with_unused_var;
@@ -728,9 +735,9 @@ TEST_F(ConnectionHandlerTest, GetConnectedDevicesMAC) {
   const std::string mac_address2 = "test_address2";
 
   const transport_manager::DeviceInfo device1(
-      0, mac_address1, device_name_, connection_type_);
+      0, mac_address1, device_name_, connection_type_, DeviceType::BLUETOOTH);
   const transport_manager::DeviceInfo device2(
-      1, mac_address2, device_name_, connection_type_);
+      1, mac_address2, device_name_, connection_type_, DeviceType::BLUETOOTH);
   connection_handler_->OnDeviceAdded(device1);
   connection_handler_->OnDeviceAdded(device2);
 
@@ -757,10 +764,16 @@ TEST_F(ConnectionHandlerTest, OnDeviceRemoved_ServiceNotStarted) {
   const uint32_t dev_handle1 = 1;
   const uint32_t dev_handle2 = 2;
 
-  const transport_manager::DeviceInfo device1(
-      dev_handle1, mac_address_, device_name_, connection_type_);
-  const transport_manager::DeviceInfo device2(
-      dev_handle2, mac_address_, device_name_, connection_type_);
+  const transport_manager::DeviceInfo device1(dev_handle1,
+                                              mac_address_,
+                                              device_name_,
+                                              connection_type_,
+                                              DeviceType::BLUETOOTH);
+  const transport_manager::DeviceInfo device2(dev_handle2,
+                                              mac_address_,
+                                              device_name_,
+                                              connection_type_,
+                                              DeviceType::BLUETOOTH);
   connection_handler_->OnDeviceAdded(device1);
   connection_handler_->OnDeviceAdded(device2);
 
@@ -780,8 +793,11 @@ TEST_F(ConnectionHandlerTest, OnDeviceRemoved_ServiceStarted) {
   AddTestDeviceConnection();
   AddTestSession();
 
-  const transport_manager::DeviceInfo device1(
-      device_handle_, mac_address_, device_name_, connection_type_);
+  const transport_manager::DeviceInfo device1(device_handle_,
+                                              mac_address_,
+                                              device_name_,
+                                              connection_type_,
+                                              DeviceType::BLUETOOTH);
 
   connection_handler_test::MockConnectionHandlerObserver
       mock_connection_handler_observer;
@@ -838,10 +854,16 @@ TEST_F(ConnectionHandlerTest, ConnectToDevice) {
   const uint32_t dev_handle1 = 1;
   const uint32_t dev_handle2 = 2;
 
-  const transport_manager::DeviceInfo device1(
-      dev_handle1, mac_address_, device_name_, connection_type_);
-  const transport_manager::DeviceInfo device2(
-      dev_handle2, mac_address_, device_name_, connection_type_);
+  const transport_manager::DeviceInfo device1(dev_handle1,
+                                              mac_address_,
+                                              device_name_,
+                                              connection_type_,
+                                              DeviceType::BLUETOOTH);
+  const transport_manager::DeviceInfo device2(dev_handle2,
+                                              mac_address_,
+                                              device_name_,
+                                              connection_type_,
+                                              DeviceType::BLUETOOTH);
   connection_handler_->OnDeviceAdded(device1);
   connection_handler_->OnDeviceAdded(device2);
 
@@ -856,10 +878,16 @@ TEST_F(ConnectionHandlerTest, ConnectToAllDevices) {
   const uint32_t dev_handle1 = 1;
   const uint32_t dev_handle2 = 2;
 
-  const transport_manager::DeviceInfo device1(
-      dev_handle1, mac_address_, device_name_, connection_type_);
-  const transport_manager::DeviceInfo device2(
-      dev_handle2, mac_address_, device_name_, connection_type_);
+  const transport_manager::DeviceInfo device1(dev_handle1,
+                                              mac_address_,
+                                              device_name_,
+                                              connection_type_,
+                                              DeviceType::BLUETOOTH);
+  const transport_manager::DeviceInfo device2(dev_handle2,
+                                              mac_address_,
+                                              device_name_,
+                                              connection_type_,
+                                              DeviceType::BLUETOOTH);
   connection_handler_->OnDeviceAdded(device1);
   connection_handler_->OnDeviceAdded(device2);
 
@@ -1957,8 +1985,11 @@ TEST_F(ConnectionHandlerTest, RunAppOnDevice_NoAppOnDevice_UNSUCCESS) {
   EXPECT_CALL(mock_transport_manager_, RunAppOnDevice(_, _)).Times(0);
   connection_handler_->RunAppOnDevice(hash_of_mac_address0, bundle_id);
 
-  transport_manager::DeviceInfo device_info(
-      device_handle_, mac_address0, device_name_, connection_type_);
+  transport_manager::DeviceInfo device_info(device_handle_,
+                                            mac_address0,
+                                            device_name_,
+                                            connection_type_,
+                                            DeviceType::BLUETOOTH);
   connection_handler_->OnDeviceAdded(device_info);
 
   connection_handler_->RunAppOnDevice(hash_of_mac_address1, bundle_id);
@@ -1967,8 +1998,11 @@ TEST_F(ConnectionHandlerTest, RunAppOnDevice_NoAppOnDevice_UNSUCCESS) {
 TEST_F(ConnectionHandlerTest, RunAppOnDevice_AppOnDevice_SUCCESS) {
   const std::string bundle_id = "test_bundle_id";
 
-  transport_manager::DeviceInfo device_info(
-      device_handle_, mac_address_, device_name_, connection_type_);
+  transport_manager::DeviceInfo device_info(device_handle_,
+                                            mac_address_,
+                                            device_name_,
+                                            connection_type_,
+                                            DeviceType::BLUETOOTH);
   connection_handler_->OnDeviceAdded(device_info);
 
   const std::string hash_of_mac_address = encryption::MakeHash(mac_address_);
@@ -1984,8 +2018,11 @@ TEST_F(ConnectionHandlerTest, OnDeviceConnectionSwitching) {
   connection_handler_->set_connection_handler_observer(
       &mock_connection_handler_observer);
 
-  const transport_manager::DeviceInfo device_info_1(
-      device_handle_, mac_address_, device_name_, connection_type_);
+  const transport_manager::DeviceInfo device_info_1(device_handle_,
+                                                    mac_address_,
+                                                    device_name_,
+                                                    connection_type_,
+                                                    DeviceType::BLUETOOTH);
 
   connection_handler_->OnDeviceAdded(device_info_1);
 
@@ -1993,7 +2030,8 @@ TEST_F(ConnectionHandlerTest, OnDeviceConnectionSwitching) {
   const transport_manager::DeviceInfo device_info_2(device_handle_ + 1,
                                                     second_mac_address,
                                                     "second_device_name",
-                                                    "second_connection_type");
+                                                    "second_connection_type",
+                                                    DeviceType::BLUETOOTH);
 
   connection_handler_->OnDeviceAdded(device_info_2);
 

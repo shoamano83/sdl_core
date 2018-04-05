@@ -194,11 +194,13 @@ class ProtocolHandlerImplTest : public ::testing::Test {
 
   // Emulate connection establish
   void AddConnection() {
-    tm_listener->OnConnectionEstablished(DeviceInfo(DeviceHandle(1u),
-                                                    std::string("mac"),
-                                                    std::string("name"),
-                                                    std::string("BTMAC")),
-                                         connection_id);
+    tm_listener->OnConnectionEstablished(
+        DeviceInfo(DeviceHandle(1u),
+                   std::string("mac"),
+                   std::string("name"),
+                   std::string("BTMAC"),
+                   transport_manager::transport_adapter::DeviceType::BLUETOOTH),
+        connection_id);
   }
 
   protocol_handler::SessionContext GetSessionContext(
@@ -624,16 +626,20 @@ TEST_F(ProtocolHandlerImplTest,
       .WillRepeatedly(Return(false));
 
   // Add two connections
-  tm_listener->OnConnectionEstablished(DeviceInfo(DeviceHandle(1u),
-                                                  std::string("mac"),
-                                                  std::string("name"),
-                                                  std::string("BTMAC")),
-                                       connection_id1);
-  tm_listener->OnConnectionEstablished(DeviceInfo(DeviceHandle(2u),
-                                                  std::string("mac"),
-                                                  std::string("name"),
-                                                  std::string("BTMAC")),
-                                       connection_id2);
+  tm_listener->OnConnectionEstablished(
+      DeviceInfo(DeviceHandle(1u),
+                 std::string("mac"),
+                 std::string("name"),
+                 std::string("BTMAC"),
+                 transport_manager::transport_adapter::DeviceType::BLUETOOTH),
+      connection_id1);
+  tm_listener->OnConnectionEstablished(
+      DeviceInfo(DeviceHandle(2u),
+                 std::string("mac"),
+                 std::string("name"),
+                 std::string("BTMAC"),
+                 transport_manager::transport_adapter::DeviceType::BLUETOOTH),
+      connection_id2);
 
   TestAsyncWaiter waiter;
   uint32_t times = 0;

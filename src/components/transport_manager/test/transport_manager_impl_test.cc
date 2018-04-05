@@ -77,8 +77,11 @@ class TransportManagerImplTest : public ::testing::Test {
       , device_name_("TestDeviceName")
       , device_handle_(
             tm_.get_converter().UidToHandle(mac_address_, connection_type_))
-      , dev_info_(
-            device_handle_, mac_address_, device_name_, connection_type_) {}
+      , dev_info_(device_handle_,
+                  mac_address_,
+                  device_name_,
+                  connection_type_,
+                  transport_adapter::DeviceType::BLUETOOTH) {}
 
   void SetUp() OVERRIDE {
     resumption::LastStateImpl last_state_("app_storage_folder",
@@ -106,13 +109,16 @@ class TransportManagerImplTest : public ::testing::Test {
         MakeShared<RawMessage>(connection_key_, version_protocol_, data, kSize);
   }
 
-  DeviceInfo ConstructDeviceInfo(const std::string& mac_address,
-                                 const std::string& connection_type,
-                                 const std::string& device_name) {
+  DeviceInfo ConstructDeviceInfo(
+      const std::string& mac_address,
+      const std::string& connection_type,
+      const std::string& device_name,
+      const transport_adapter::DeviceType device_type) {
     const auto device_handle(
         tm_.get_converter().UidToHandle(mac_address, connection_type));
 
-    return DeviceInfo(device_handle, mac_address, device_name, connection_type);
+    return DeviceInfo(
+        device_handle, mac_address, device_name, connection_type, device_type);
   }
 
   void SetOnDeviceExpectations(const DeviceInfo& device_info) {
@@ -1046,8 +1052,11 @@ TEST_F(TransportManagerImplTest,
   const transport_manager::DeviceHandle device_handle(
       tm_.get_converter().UidToHandle(mac_address, connection_type));
 
-  DeviceInfo second_device(
-      device_handle, mac_address, device_name, connection_type);
+  DeviceInfo second_device(device_handle,
+                           mac_address,
+                           device_name,
+                           connection_type,
+                           transport_adapter::DeviceType::TCP);
   DeviceList device_list_2;
   device_list_2.push_back(second_device.mac_address());
 
@@ -1079,7 +1088,10 @@ TEST_F(
 
   const auto usb_serial = "USB_serial";
   DeviceInfo second_device =
-      ConstructDeviceInfo(usb_serial, "USB_IOS", "SecondDeviceName");
+      ConstructDeviceInfo(usb_serial,
+                          "USB_IOS",
+                          "SecondDeviceName",
+                          transport_adapter::DeviceType::IOS_USB);
 
   DeviceList second_adapter_device_list;
   second_adapter_device_list.push_back(usb_serial);
@@ -1148,7 +1160,10 @@ TEST_F(TransportManagerImplTest,
 
   const auto usb_serial = "USB_serial";
   DeviceInfo second_device =
-      ConstructDeviceInfo(usb_serial, "USB_IOS", "SecondDeviceName");
+      ConstructDeviceInfo(usb_serial,
+                          "USB_IOS",
+                          "SecondDeviceName",
+                          transport_adapter::DeviceType::IOS_USB);
 
   DeviceList second_adapter_devices;
   second_adapter_devices.push_back(second_device.mac_address());
@@ -1223,7 +1238,10 @@ TEST_F(TransportManagerImplTest,
   auto second_mock_adapter = utils::MakeShared<MockTransportAdapter>();
 
   DeviceInfo second_device =
-      ConstructDeviceInfo("MA:CA:DR:ES:S", "USB_IOS", "SecondDeviceName");
+      ConstructDeviceInfo("MA:CA:DR:ES:S",
+                          "USB_IOS",
+                          "SecondDeviceName",
+                          transport_adapter::DeviceType::IOS_USB);
 
   SetAddDeviceExpectations(second_mock_adapter.get(),
                            transport_adapter::DeviceType::IOS_USB,
@@ -1297,8 +1315,11 @@ TEST_F(TransportManagerImplTest,
   const transport_manager::DeviceHandle device_handle(
       tm_.get_converter().UidToHandle(mac_address, connection_type));
 
-  DeviceInfo second_device(
-      device_handle, mac_address, device_name, connection_type);
+  DeviceInfo second_device(device_handle,
+                           mac_address,
+                           device_name,
+                           connection_type,
+                           transport_adapter::DeviceType::TCP);
   DeviceList device_list_2;
   device_list_2.push_back(second_device.mac_address());
   SetDeviceExpectations(second_mock_adapter, device_list_2, second_device);
