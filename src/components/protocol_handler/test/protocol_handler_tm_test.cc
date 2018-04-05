@@ -211,6 +211,7 @@ class ProtocolHandlerImplTest : public ::testing::Test {
       const uint32_t hash_id,
       const bool protection_flag) {
     return protocol_handler::SessionContext(connection_id,
+                                            connection_id,
                                             initial_session_id,
                                             new_session_id,
                                             service_type,
