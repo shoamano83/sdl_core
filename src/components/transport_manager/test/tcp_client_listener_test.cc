@@ -95,6 +95,9 @@ class MockTransportAdapterController : public TransportAdapterController {
   MOCK_METHOD2(DeviceDisconnected,
                void(const DeviceUID& device_handle,
                     const DisconnectDeviceError& error));
+  MOCK_METHOD1(TransportConfigUpdated,
+               void(const transport_manager::transport_adapter::TransportConfig&
+                        new_config));
 };
 
 class TcpClientListenerTest : public ::testing::Test {

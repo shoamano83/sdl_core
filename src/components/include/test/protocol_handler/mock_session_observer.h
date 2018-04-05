@@ -76,6 +76,9 @@ class MockSessionObserver : public ::protocol_handler::SessionObserver {
                void(const uint32_t& connection_key));
   MOCK_METHOD1(OnMalformedMessageCallback,
                void(const uint32_t& connection_key));
+  MOCK_CONST_METHOD1(device_type,
+                     transport_manager::transport_adapter::DeviceType(
+                         transport_manager::ConnectionUID connection_handle));
   MOCK_CONST_METHOD2(
       KeyFromPair,
       uint32_t(transport_manager::ConnectionUID connection_handle,
