@@ -1961,7 +1961,8 @@ TEST_F(ProtocolHandlerImplTest,
   times++;
 
   // Act
-  protocol_handler_impl->SendEndService(connection_id, session_id, kControl);
+  protocol_handler_impl->SendEndService(
+      connection_id, connection_id, session_id, kControl);
 
   EXPECT_TRUE(waiter->WaitFor(times, kAsyncExpectationsTimeout));
 }
