@@ -690,7 +690,7 @@ TEST_F(ProfileTest, CheckStringContainer) {
   std::vector<std::string>::iterator element_mode = diagmodes_list.begin();
   element_mode++;
   element_mode++;
-  diag_mode = std::find(diagmodes_list.begin(), diagmodes_list.end(), " 0x03");
+  diag_mode = std::find(diagmodes_list.begin(), diagmodes_list.end(), "0x03");
   EXPECT_EQ(diag_mode, element_mode);
 }
 
