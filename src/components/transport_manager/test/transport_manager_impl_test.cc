@@ -137,6 +137,9 @@ class TransportManagerImplTest : public ::testing::Test {
 
     EXPECT_CALL(*mock_adapter, GetConnectionType())
         .WillRepeatedly(Return(device_info.connection_type()));
+
+    EXPECT_CALL(*mock_adapter, GetDeviceType())
+        .WillRepeatedly(Return(device_info.device_type()));
   }
 
   void SetAddDeviceExpectations(MockTransportAdapter* mock_adapter,
@@ -170,6 +173,9 @@ class TransportManagerImplTest : public ::testing::Test {
     EXPECT_CALL(*mock_adapter_, GetConnectionType())
         .Times(AtLeast(1))
         .WillRepeatedly(Return(dev_info_.connection_type()));
+    EXPECT_CALL(*mock_adapter_, GetDeviceType())
+        .Times(AtLeast(1))
+        .WillRepeatedly(Return(dev_info_.device_type()));
 
     EXPECT_CALL(*tm_listener_, OnDeviceAdded(dev_info_));
     EXPECT_CALL(*tm_listener_, OnDeviceListUpdated(_));
@@ -190,6 +196,8 @@ class TransportManagerImplTest : public ::testing::Test {
         .WillOnce(Return(dev_info_.name()));
     EXPECT_CALL(*mock_adapter_, GetConnectionType())
         .WillRepeatedly(Return(dev_info_.connection_type()));
+    EXPECT_CALL(*mock_adapter_, GetDeviceType())
+        .WillRepeatedly(Return(dev_info_.device_type()));
 
     EXPECT_CALL(*tm_listener_,
                 OnConnectionEstablished(dev_info_, connection_key_));
@@ -748,6 +756,9 @@ TEST_F(TransportManagerImplTest, ReceiveEventFromDevice_DeviceListUpdated) {
   EXPECT_CALL(*mock_adapter_, GetConnectionType())
       .Times(AtLeast(1))
       .WillRepeatedly(Return(dev_info_.connection_type()));
+  EXPECT_CALL(*mock_adapter_, GetDeviceType())
+      .Times(AtLeast(1))
+      .WillRepeatedly(Return(dev_info_.device_type()));
 
   EXPECT_CALL(*tm_listener_, OnDeviceFound(dev_info_))
       .WillOnce(NotifyTestAsyncWaiter(&waiter));
