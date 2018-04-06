@@ -99,6 +99,8 @@ class ResumeCtrlTest : public ::testing::Test {
         .WillByDefault(ReturnRef(state_controller_));
     ON_CALL(app_mngr_, get_settings())
         .WillByDefault(ReturnRef(mock_application_manager_settings_));
+    ON_CALL(app_mngr_, CheckResumptionRequiredTransportAvailable(_))
+        .WillByDefault(Return(true));
 
     ON_CALL(mock_application_manager_settings_, use_db_for_resumption())
         .WillByDefault(Return(false));
