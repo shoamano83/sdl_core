@@ -119,6 +119,10 @@ class TcpClientListener : public ClientConnectionListener {
                           const std::string ipv6_addr);
 
 #ifdef BUILD_TESTS
+  void set_network_interface_listener(NetworkInterfaceListener* listener) {
+    interface_listener_ = listener;
+  }
+
   uint16_t port() const {
     return port_;
   }

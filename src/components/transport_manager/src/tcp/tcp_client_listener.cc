@@ -597,6 +597,17 @@ bool TcpClientListener::GetIPv4Address(const std::string interface_name,
                                        struct in_addr* ip_address) {
   LOG4CXX_AUTO_TRACE(logger_);
 
+#ifdef BUILD_TESTS
+  // return a dummy address of INADDR_LOOPBACK
+  struct in_addr dummy_addr;
+  dummy_addr.s_addr = htonl(INADDR_LOOPBACK);
+
+  if (ip_address != NULL) {
+    *ip_address = dummy_addr;
+  }
+  return true;
+#endif
+
   struct ifaddrs* if_list;
   if (getifaddrs(&if_list) != 0) {
     LOG4CXX_WARN(logger_, "getifaddrs failed");
