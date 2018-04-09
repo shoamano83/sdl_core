@@ -542,7 +542,7 @@ int TcpClientListener::CreateIPv4ServerSocket(
   struct in_addr ipv4_address;
   memset(&ipv4_address, 0, sizeof(ipv4_address));
   if (interface_name.empty()) {
-    ipv4_address.s_addr = INADDR_ANY;
+    ipv4_address.s_addr = htonl(INADDR_ANY);
   } else if (!GetIPv4Address(interface_name, &ipv4_address)) {
     return -1;
   }
