@@ -130,11 +130,11 @@ TransportAdapter::Error TcpClientListener::Init() {
 void TcpClientListener::Terminate() {
   LOG4CXX_AUTO_TRACE(logger_);
 
+  if (!initialized_) {
+    return;
+  }
+
   if (!IsListeningOnSpecificInterface()) {
-    if (socket_ == -1) {
-      LOG4CXX_WARN(logger_, "Socket has been closed");
-      return;
-    }
     DestroyServerSocket(socket_);
     socket_ = -1;
   } else {
@@ -157,6 +157,7 @@ TcpClientListener::~TcpClientListener() {
   delete thread_->delegate();
   threads::DeleteThread(thread_);
   Terminate();
+  delete interface_listener_;
 }
 
 void SetKeepaliveOptions(const int fd) {
