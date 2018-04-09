@@ -62,7 +62,7 @@
 #include "utils/make_shared.h"
 #include "utils/threads/thread.h"
 #include "transport_manager/transport_adapter/transport_adapter_controller.h"
-#include "transport_manager/tcp/network_interface_listener.h"
+#include "transport_manager/tcp/network_interface_listener_impl.h"
 #include "transport_manager/tcp/tcp_device.h"
 #include "transport_manager/tcp/tcp_socket_connection.h"
 
@@ -90,7 +90,7 @@ TcpClientListener::TcpClientListener(TransportAdapterController* controller,
   thread_ = threads::CreateThread("TcpClientListener",
                                   new ListeningThreadDelegate(this));
   interface_listener_ =
-      new NetworkInterfaceListener(this, designated_interface);
+      new NetworkInterfaceListenerImpl(this, designated_interface);
 }
 
 TransportAdapter::Error TcpClientListener::Init() {
